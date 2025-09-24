@@ -99,6 +99,49 @@
                 }
             }
         },
+        async flatten_post_has_only_callouts(elem) {
+            const content_elem = elem.getElementsByClassName("cooked").item(0);
+            if (content_elem) {
+                const children = Array.from(content_elem.children);
+                children.pop(); // Remove `cooked-selection-barrier` element.
+                for (const elem of children) {
+                    if (!elem.classList.contains("callout")) {
+                        return;
+                    }
+                }
+
+                for (const elem of children) {
+                    const title_elem = elem.getElementsByClassName("callout-title-inner").item(0);
+                    const content_elem = elem.getElementsByClassName("callout-content").item(0);
+
+                    if (
+                        title_elem.textContent.trim().toLowerCase() ===
+                        elem.dataset.calloutType.toLowerCase()
+                    ) {
+                        if (content_elem) {
+                            elem.replaceWith(...content_elem.childNodes);
+                        }
+                        else {
+                            elem.remove();
+                        }
+                    }
+                    else {
+                        if (content_elem) {
+                            elem.replaceWith(...title_elem.childNodes);
+                        }
+                        else {
+                            elem.replaceWith(
+                                ...title_elem.childNodes,
+                                document.createTextNode(":"),
+                                ...content_elem.childNodes
+                            );
+                        }
+                    }
+
+                    log(elem, "is fattened due to this post has only callouts.");
+                }
+            }
+        },
         async expand_all_callouts(elem) {
             const content_elem = elem.getElementsByClassName("cooked").item(0);
             if (content_elem) {
@@ -134,6 +177,42 @@
                     }
                 }
             }
+        },
+        async flatten_all_callouts(elem) {
+            const content_elem = elem.getElementsByClassName("cooked").item(0);
+            if (content_elem) {
+                const callout_elems = Array.from(content_elem.getElementsByClassName("callout"));
+                for (const elem of callout_elems) {
+                    const title_elem = elem.getElementsByClassName("callout-title-inner").item(0);
+                    const content_elem = elem.getElementsByClassName("callout-content").item(0);
+
+                    if (
+                        title_elem.textContent.trim().toLowerCase() ===
+                        elem.dataset.calloutType.toLowerCase()
+                    ) {
+                        if (content_elem) {
+                            elem.replaceWith(...content_elem.childNodes);
+                        }
+                        else {
+                            elem.remove();
+                        }
+                    }
+                    else {
+                        if (content_elem) {
+                            elem.replaceWith(...title_elem.childNodes);
+                        }
+                        else {
+                            elem.replaceWith(
+                                ...title_elem.childNodes,
+                                document.createTextNode(":"),
+                                ...content_elem.childNodes
+                            );
+                        }
+                    }
+
+                    log(elem, "is fattened.");
+                }
+            }
         }
     });
 
@@ -145,8 +224,10 @@
         flatten_spamming_nested_callouts: true,
         remove_callouts_have_not_content: true,
         flatten_callouts_with_only_title: true,
+        flatten_post_has_only_callouts: true,
         expand_all_callouts: false,
-        replace_collapsable_callouts_to_summary_and_detail: false
+        replace_collapsable_callouts_to_summary_and_detail: false,
+        flatten_all_callouts: false
     });
 
     async function auto_process_post(elem) {
