@@ -3,9 +3,9 @@
 // @author MoRanYue
 // @namespace https://github.com/MoRanYue/linux_do_userscripts
 // @version 0.1.0
-// @updateURL
-// @downloadURL
-// @updateURL https://
+// @updateURL https://github.com/MoRanYue/linux_do_userscripts/raw/refs/heads/main/ldbcp.user.js
+// @downloadURL https://github.com/MoRanYue/linux_do_userscripts/raw/refs/heads/main/ldbcp.user.js
+// @supportURL https://github.com/MoRanYue/linux_do_userscripts/issues
 // @description Prevent awful and bad composing in LINUX DO communities.
 // @license MIT
 // @match *://linux.do/*
